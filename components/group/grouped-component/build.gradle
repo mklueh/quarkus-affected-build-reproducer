@@ -1,0 +1,12 @@
+plugins {
+    id 'java'
+    id 'io.quarkus'
+}
+
+
+
+
+dependencies {
+    implementation("io.quarkus:quarkus-smallrye-openapi")
+    implementation("io.quarkus:quarkus-cache")
+}

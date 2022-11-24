@@ -1,0 +1,3 @@
+[submodule "affected-plugin"]
+	path = affected-plugin
+	url = https://github.com/mklueh/affected-plugin

@@ -1,0 +1,86 @@
+import io.github.mklueh.affected.AffectedPlugin
+import io.github.mklueh.affected.configuration.AffectedMode
+
+buildscript {
+    dependencies {
+        classpath 'io.github.mklueh:affected-plugin:*'
+    }
+}
+plugins {
+    id 'java'
+    id 'io.quarkus'
+    id 'io.github.crimix.changed-projects-task' version '1.5'
+}
+
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: AffectedPlugin
+
+group 'com.mklueh'
+
+changedProjectsTask {
+    debugLogging = true
+    affectsAllRegex = [~'build.gradle$']
+    ignoredRegex = [~'^.*([.]css|[.]html)$']
+    changedProjectsMode = "ONLY_DIRECTLY"
+    //neverRunProjects = [":quarkus-affected-build-reproducer"]
+    //alwaysRunProject = [":app1", ":app2"]
+}
+
+
+affected {
+    debugLogging = true
+    //affectsAllRegex = [~'build.gradle$', ~'gradle.properties$']
+    //projects = [":applications:app1", ":applications:app2"]
+    neverRunProjects = [":quarkus-affected-build-reproducer"]
+    ignoredRegex = [~'^.*([.]css|[.]html)$']
+    affectedMode = AffectedMode.ONLY_DIRECTLY
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+
+    dependencies {
+        implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
+        implementation 'io.quarkus:quarkus-resteasy'
+        implementation 'io.quarkus:quarkus-arc'
+        implementation 'io.quarkus:quarkus-container-image-docker'
+        testImplementation 'io.quarkus:quarkus-junit5'
+        testImplementation 'io.rest-assured:rest-assured:5.3.0'
+    }
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+
+    test {
+        systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
+    }
+
+    compileJava {
+        options.encoding = 'UTF-8'
+        options.compilerArgs << '-parameters'
+    }
+
+    compileTestJava {
+        options.encoding = 'UTF-8'
+    }
+
+}

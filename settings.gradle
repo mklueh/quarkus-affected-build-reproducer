@@ -1,0 +1,24 @@
+pluginManagement {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        mavenLocal()
+    }
+    plugins {
+        id "${quarkusPluginId}" version "${quarkusPluginVersion}"
+    }
+}
+rootProject.name = 'quarkus-affected-build-reproducer'
+
+include ':applications:app1'
+include ':applications:app2'
+include ':components:component1'
+include ':components:component2'
+include ':components:group:grouped-component'
+
+includeBuild "affected-plugin"
+
+
