@@ -1,6 +1,5 @@
 import io.github.mklueh.affected.AffectedPlugin
 import io.github.mklueh.affected.configuration.AffectedMode
-import com.dropbox.affectedmoduledetector.AffectedModuleConfiguration
 
 buildscript {
     dependencies {
@@ -12,6 +11,7 @@ plugins {
     id 'io.quarkus'
     id 'io.github.crimix.changed-projects-task' version '1.5'
     id 'com.ismaeldivita.changetracker' version '0.7.4'
+    id "com.dorongold.task-tree" version "2.1.0"
 }
 
 
@@ -55,7 +55,7 @@ affected {
     debugLogging = true
     //affectsAllRegex = [~'build.gradle$', ~'gradle.properties$']
     //projects = [":applications:app1", ":applications:app2"]
-    neverRunProjects = [":quarkus-affected-build-reproducer"]
+    neverRunProjects = [":quarkus-affected-build-reproducer", ":"]
     ignoredRegex = [~'^.*([.]css|[.]html)$']
     affectedMode = AffectedMode.ONLY_DIRECTLY
 }
