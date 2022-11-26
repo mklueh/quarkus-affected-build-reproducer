@@ -1,5 +1,6 @@
 import io.github.mklueh.affected.AffectedPlugin
 import io.github.mklueh.affected.configuration.AffectedMode
+import com.dropbox.affectedmoduledetector.AffectedModuleConfiguration
 
 buildscript {
     dependencies {
@@ -10,6 +11,7 @@ plugins {
     id 'java'
     id 'io.quarkus'
     id 'io.github.crimix.changed-projects-task' version '1.5'
+    id 'com.ismaeldivita.changetracker' version '0.7.4'
 }
 
 
@@ -18,6 +20,26 @@ apply plugin: 'idea'
 apply plugin: AffectedPlugin
 
 group 'com.mklueh'
+
+changeTracker {
+    tasks = ['build']
+    whitelist = [':app1', ':app2']
+    blacklist = [
+            ":component1",
+            ":component2",
+            ":applications",
+            ":components",
+            ":components:group",
+            ":grouped-component",
+            ":components:component1",
+            ":components:component2",
+            ":components:group:grouped-component"
+
+    ]
+    //reevaluate = [':sharedTest']
+    branch = "master"
+    remote = "origin"
+}
 
 changedProjectsTask {
     debugLogging = true
@@ -37,6 +59,7 @@ affected {
     ignoredRegex = [~'^.*([.]css|[.]html)$']
     affectedMode = AffectedMode.ONLY_DIRECTLY
 }
+
 
 repositories {
     mavenCentral()
